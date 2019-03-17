@@ -1,14 +1,28 @@
 package sg.sph.test.core.network;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Consumption
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Consumption extends RealmObject
 {
+  @PrimaryKey
   private int year;
   private double totalVolume;
+  private RealmList<Breakdown> breakdowns;
 
-  private List<Breakdown> breakdowns = new ArrayList<>();
+  public Consumption()
+  {
+  }
+
+  public Consumption(int year, double totalVolume, RealmList<Breakdown> breakdowns)
+  {
+    this.year = year;
+    this.totalVolume = totalVolume;
+    this.breakdowns = breakdowns;
+  }
 
   public int getYear()
   {
@@ -20,19 +34,23 @@ public class Consumption
     this.year = year;
   }
 
-  public List<Breakdown> getBreakdowns()
+  public RealmList<Breakdown> getBreakdowns()
   {
+    if (breakdowns == null)
+    {
+      breakdowns = new RealmList<>();
+    }
     return breakdowns;
   }
 
   public void setBreakdowns(List<Breakdown> breakdowns)
   {
-    this.breakdowns.clear();
+    getBreakdowns().clear();
     totalVolume = 0;
 
     if (breakdowns != null)
     {
-      this.breakdowns.addAll(breakdowns);
+      getBreakdowns().addAll(breakdowns);
 
       for(Breakdown breakdown : breakdowns)
       {
@@ -43,7 +61,7 @@ public class Consumption
 
   public void addData(Breakdown breakdown)
   {
-    this.breakdowns.add(breakdown);
+    getBreakdowns().add(breakdown);
     totalVolume += breakdown.getVolume();
   }
 

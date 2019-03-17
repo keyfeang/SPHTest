@@ -1,6 +1,8 @@
 package sg.sph.test.core.network;
 
-public class Breakdown
+import io.realm.RealmObject;
+
+public class Breakdown extends RealmObject
 {
   private int quarter;
   private double volume;

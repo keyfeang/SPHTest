@@ -11,24 +11,32 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import sg.sph.test.core.network.api.INetworkApi;
 import sg.sph.test.core.network.data.Record;
+import sg.sph.test.core.network.storage.INetworkStorage;
 
 public class MobileNetworkService extends ServiceExecutor
                                implements INetworkService
 {
   private final INetworkApi mApi;
+  private final INetworkStorage mStorage;
 
-  public MobileNetworkService(INetworkApi api)
+  public MobileNetworkService(INetworkApi api, INetworkStorage storage)
   {
     mApi = api;
+    mStorage = storage;
   }
 
   @Override
-  public Observable<List<Consumption>> GetConsumption(int fromYear, int toYear)
+  public Observable<List<Consumption>> getConsumptions()
+  {
+    return Observable.just(mStorage.listAll());
+  }
+
+  @Override
+  public Observable<List<Consumption>> syncConsumption(int fromYear, int toYear)
   {
     // TODO Hard offset and limit. If need paging. Need to redesign result data model to
     // provide paging properties. HasNext(), current offset and limit
     return mApi.GetDataUsage(0, 56)
-        .subscribeOn(Schedulers.newThread())
         .map(args ->
         {
           List<Consumption> result = new ArrayList<>(toYear - fromYear);
@@ -56,6 +64,9 @@ public class MobileNetworkService extends ServiceExecutor
 
             consumption.addData(new Breakdown(quarter, r.getVolume()));
           }
+
+          mStorage.clearAll();
+          mStorage.bulkInsertOrReplace(result);
 
           return result;
         });

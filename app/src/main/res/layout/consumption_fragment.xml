@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="android.view.View"/>
         <variable name="model"
                   type="sg.sph.test.views.consumption.ConsumptionViewModel" />
     </data>
@@ -15,5 +16,12 @@
                                                 app:layout_constraintLeft_toLeftOf="parent"
                                                 app:layout_constraintRight_toRightOf="parent"
                                                 app:layout_constraintTop_toTopOf="parent" />
+        <ProgressBar android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:visibility="@{model.isBusy ? View.VISIBLE : View.INVISIBLE}"
+                     app:layout_constraintBottom_toBottomOf="parent"
+                     app:layout_constraintLeft_toLeftOf="parent"
+                     app:layout_constraintRight_toRightOf="parent"
+                     app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>
