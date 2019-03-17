@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 import sg.sph.test.core.network.api.INetworkApi;
 import sg.sph.test.core.network.data.Record;
@@ -40,6 +39,7 @@ public class MobileNetworkService extends ServiceExecutor
           {
             String[] yearQuarter = r.getQuarter().split("-");
             int year = Integer.parseInt(yearQuarter[0]);
+            int quarter = Integer.parseInt(String.valueOf(yearQuarter[1].charAt(1)));
 
             if (year < fromYear || year > toYear)
             {
@@ -54,7 +54,7 @@ public class MobileNetworkService extends ServiceExecutor
               result.add(consumption);
             }
 
-            consumption.addVolume(r.getVolume());
+            consumption.addData(new Breakdown(quarter, r.getVolume()));
           }
 
           return result;
