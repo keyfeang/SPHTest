@@ -22,6 +22,27 @@ import static org.mockito.Mockito.mock;
 public class NetworkServiceUnitTest
 {
   @Test
+  public void testHttpException()
+  {
+    INetworkApi mockApi = mock(INetworkApi.class);
+    doReturn(Observable.error(new HttpException(500, "")))
+        .when(mockApi)
+        .GetDataUsage(anyInt(), anyInt());
+
+    INetworkStorage storage = mock(INetworkStorage.class);
+
+    INetworkService service = new MobileNetworkService(mockApi, storage);
+    ((MobileNetworkService) service).onCreate();
+
+    TestObserver<List<Consumption>> testObserver = service.syncConsumption(0, 56).test();
+
+    testObserver.assertError(HttpException.class);
+    testObserver.assertError(args -> ((HttpException)args).statusCode == 500);
+
+    testObserver.dispose();
+  }
+
+  @Test
   public void testSubscription()
   {
     INetworkApi mockApi = mock(INetworkApi.class);
