@@ -21,7 +21,7 @@ public class MainActivity extends BaseActivity
     if (fm.findFragmentByTag("consumptionFragment") == null)
     {
       FragmentTransaction trx = fm.beginTransaction();
-      trx.add(new ConsumptionFragment(), "consumptionFragment");
+      trx.replace(R.id.content, new ConsumptionFragment(), "consumptionFragment");
       trx.commit();
     }
   }
