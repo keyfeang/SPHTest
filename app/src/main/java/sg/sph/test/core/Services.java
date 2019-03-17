@@ -6,6 +6,8 @@ import sg.sph.test.core.network.INetworkService;
 import sg.sph.test.core.network.MobileNetworkService;
 import sg.sph.test.core.network.api.INetworkApi;
 import sg.sph.test.core.network.api.MobileNetworkApi;
+import sg.sph.test.core.network.storage.INetworkStorage;
+import sg.sph.test.core.network.storage.NetworkRealmStorage;
 import sg.sph.test.core.providers.request.IRequestProvider;
 import sg.sph.test.core.providers.request.RequestProvider;
 
@@ -36,8 +38,9 @@ public class Services
     IRequestProvider requestProvider = new RequestProvider(context);
 
     INetworkApi networkApi = new MobileNetworkApi(requestProvider);
+    INetworkStorage networkStorage = new NetworkRealmStorage();
 
-    mNetworkService = new MobileNetworkService(networkApi);
+    mNetworkService = new MobileNetworkService(networkApi, networkStorage);
 
     mNetworkService.onCreate();
   }

@@ -25,7 +25,7 @@ public class NetworkServiceUnitTest
     INetworkService service = new MobileNetworkService(mockApi);
     ((MobileNetworkService) service).onCreate();
 
-    TestObserver<List<Consumption>> testObserver = service.GetConsumption(0, 56).test();
+    TestObserver<List<Consumption>> testObserver = service.syncConsumption(0, 56).test();
 
     testObserver.assertNoErrors();
     testObserver.assertSubscribed();
@@ -48,7 +48,7 @@ public class NetworkServiceUnitTest
     INetworkService service = new MobileNetworkService(mockApi);
     ((MobileNetworkService) service).onCreate();
 
-    Observable<List<Consumption>> observable = service.GetConsumption(0, 56);
+    Observable<List<Consumption>> observable = service.syncConsumption(0, 56);
 
     observable.subscribeOn(testScheduler);
     observable.observeOn(testScheduler);
@@ -80,7 +80,7 @@ public class NetworkServiceUnitTest
     INetworkService service = new MobileNetworkService(mockApi);
     ((MobileNetworkService) service).onCreate();
 
-    Observable<List<Consumption>> observable = service.GetConsumption(2008, 2018);
+    Observable<List<Consumption>> observable = service.syncConsumption(2008, 2018);
 
     observable.subscribeOn(testScheduler);
 
