@@ -133,4 +133,41 @@ public class NetworkServiceUnitTest
 
     testObserver.dispose();
   }
+
+  @Test
+  public void testCacheData()
+  {
+    TestScheduler testScheduler = new TestScheduler();
+
+    RealmList<Breakdown> breakdowns = new RealmList<>();
+
+    List<Consumption> data = new ArrayList<>();
+    data.add(new Consumption(2008, 0.5, breakdowns));
+    data.add(new Consumption(2009, 0.1, null));
+
+    INetworkApi mockApi = mock(INetworkApi.class);
+
+    INetworkStorage mockStorage = mock(INetworkStorage.class);
+    doReturn(data).when(mockStorage).listAll();
+
+    INetworkService service = new MobileNetworkService(mockApi, mockStorage);
+    ((MobileNetworkService) service).onCreate();
+
+    Observable<List<Consumption>> observable = service.getConsumptions();
+
+    observable.subscribeOn(testScheduler);
+    observable.observeOn(testScheduler);
+
+    TestObserver<List<Consumption>> testObserver = new TestObserver<>();
+    observable.subscribe(testObserver);
+
+    testObserver.assertNoErrors();
+    testObserver.assertSubscribed();
+
+    testObserver.assertValue(args -> !args.isEmpty());
+    testObserver.assertValue(args -> args.get(1).getTotalVolume() == 0.1);
+    testObserver.assertValue(args -> args.get(1).getBreakdowns().isEmpty());
+
+    testObserver.dispose();
+  }
 }
