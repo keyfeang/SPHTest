@@ -1,5 +1,7 @@
 package sg.sph.test.core.network;
 
+import com.keyfe.ang.foundation.tools.http.HttpException;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -8,9 +10,12 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.schedulers.TestScheduler;
+import io.realm.RealmList;
 import sg.sph.test.core.network.api.INetworkApi;
 import sg.sph.test.core.network.data.Record;
+import sg.sph.test.core.network.storage.INetworkStorage;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -22,14 +27,15 @@ public class NetworkServiceUnitTest
     INetworkApi mockApi = mock(INetworkApi.class);
     doReturn(Observable.just(new ArrayList())).when(mockApi).GetDataUsage(0, 56);
 
-    INetworkService service = new MobileNetworkService(mockApi);
+    INetworkStorage storage = mock(INetworkStorage.class);
+
+    INetworkService service = new MobileNetworkService(mockApi, storage);
     ((MobileNetworkService) service).onCreate();
 
     TestObserver<List<Consumption>> testObserver = service.syncConsumption(0, 56).test();
 
     testObserver.assertNoErrors();
     testObserver.assertSubscribed();
-    testObserver.assertNotComplete();
 
     testObserver.dispose();
   }
@@ -41,14 +47,15 @@ public class NetworkServiceUnitTest
 
     TestScheduler testScheduler = new TestScheduler();
 
-
     INetworkApi mockApi = mock(INetworkApi.class);
     doReturn(Observable.just(records)).when(mockApi).GetDataUsage(0, 56);
 
-    INetworkService service = new MobileNetworkService(mockApi);
+    INetworkStorage storage = mock(INetworkStorage.class);
+
+    INetworkService service = new MobileNetworkService(mockApi, storage);
     ((MobileNetworkService) service).onCreate();
 
-    Observable<List<Consumption>> observable = service.syncConsumption(0, 56);
+    Observable<List<Consumption>> observable = service.syncConsumption(2008, 2018);
 
     observable.subscribeOn(testScheduler);
     observable.observeOn(testScheduler);
@@ -63,7 +70,7 @@ public class NetworkServiceUnitTest
   }
 
   @Test
-  public void testRecord()
+  public void testRecord() throws HttpException
   {
     TestScheduler testScheduler = new TestScheduler();
 
@@ -77,12 +84,15 @@ public class NetworkServiceUnitTest
     INetworkApi mockApi = mock(INetworkApi.class);
     doReturn(Observable.just(records)).when(mockApi).GetDataUsage(0, 56);
 
-    INetworkService service = new MobileNetworkService(mockApi);
+    INetworkStorage storage = mock(INetworkStorage.class);
+
+    INetworkService service = new MobileNetworkService(mockApi, storage);
     ((MobileNetworkService) service).onCreate();
 
     Observable<List<Consumption>> observable = service.syncConsumption(2008, 2018);
 
     observable.subscribeOn(testScheduler);
+    observable.observeOn(testScheduler);
 
     TestObserver<List<Consumption>> testObserver = new TestObserver<>();
     observable.subscribe(testObserver);
