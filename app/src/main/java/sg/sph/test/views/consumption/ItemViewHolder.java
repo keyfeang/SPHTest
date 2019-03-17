@@ -24,14 +24,22 @@ public class ItemViewHolder extends RecyclerView.ViewHolder
 
   private static QuarterComparator smComparator = new QuarterComparator();
 
-  public ItemViewHolder(@NonNull ConsumptionItemBinding binding)
+  private Consumption data;
+  public final OnArrowClickEventHandler arrowClickEventHandler;
+
+  public ItemViewHolder(@NonNull ConsumptionItemBinding binding,
+                        OnArrowClickEventHandler arrowClickEventHandler)
   {
     super(binding.getRoot());
     binding.setModel(this);
+
+    this.arrowClickEventHandler = arrowClickEventHandler;
   }
 
   public void onBind(Consumption consumption)
   {
+    data = consumption;
+
     year.set(String.valueOf(consumption.getYear()));
     volume.set(NumberUtil.format(consumption.getTotalVolume(), 2));
 
@@ -61,6 +69,11 @@ public class ItemViewHolder extends RecyclerView.ViewHolder
       hasDecreased = d.getVolume() < data.get(i - 1).getVolume();
     }
     return hasDecreased;
+  }
+
+  public Consumption getData()
+  {
+    return data;
   }
 
   private static class QuarterComparator implements Comparator<Breakdown>

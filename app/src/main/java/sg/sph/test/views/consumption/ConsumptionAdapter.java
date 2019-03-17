@@ -16,7 +16,14 @@ import sg.sph.test.databinding.ConsumptionItemBinding;
 
 public class ConsumptionAdapter extends RecyclerView.Adapter
 {
+  private OnArrowClickEventHandler mArrowClickEventHandler;
+
   private List<Consumption> mDataSet = new ArrayList<>(0);
+
+  public ConsumptionAdapter(OnArrowClickEventHandler arrowClickEventHandler)
+  {
+    mArrowClickEventHandler = arrowClickEventHandler;
+  }
 
   public void setDataSet(List<Consumption> dataSet)
   {
@@ -44,7 +51,7 @@ public class ConsumptionAdapter extends RecyclerView.Adapter
     ConsumptionItemBinding binding =
         DataBindingUtil.inflate(inflater, R.layout.consumption_item, viewGroup, false);
 
-    return new ItemViewHolder(binding);
+    return new ItemViewHolder(binding, mArrowClickEventHandler);
   }
 
   @Override
