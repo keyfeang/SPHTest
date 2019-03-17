@@ -1,9 +1,14 @@
 package sg.sph.test.core.network;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Consumption
 {
   private int year;
-  private double volume;
+  private double totalVolume;
+
+  private List<Breakdown> breakdowns = new ArrayList<>();
 
   public int getYear()
   {
@@ -15,18 +20,40 @@ public class Consumption
     this.year = year;
   }
 
-  public double getVolume()
+  public List<Breakdown> getBreakdowns()
   {
-    return volume;
+    return breakdowns;
   }
 
-  public void setVolume(double volume)
+  public void setBreakdowns(List<Breakdown> breakdowns)
   {
-    this.volume = volume;
+    this.breakdowns.clear();
+    totalVolume = 0;
+
+    if (breakdowns != null)
+    {
+      this.breakdowns.addAll(breakdowns);
+
+      for(Breakdown breakdown : breakdowns)
+      {
+        totalVolume += breakdown.getVolume();
+      }
+    }
   }
 
-  public void addVolume(double volume)
+  public void addData(Breakdown breakdown)
   {
-    this.volume += volume;
+    this.breakdowns.add(breakdown);
+    totalVolume += breakdown.getVolume();
+  }
+
+  public double getTotalVolume()
+  {
+    return totalVolume;
+  }
+
+  public void setTotalVolume(double totalVolume)
+  {
+    this.totalVolume = totalVolume;
   }
 }

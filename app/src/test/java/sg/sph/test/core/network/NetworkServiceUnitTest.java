@@ -65,6 +65,8 @@ public class NetworkServiceUnitTest
   @Test
   public void testRecord()
   {
+    TestScheduler testScheduler = new TestScheduler();
+
     List<Record> records = new ArrayList<>();
     records.add(new Record(0, "2006-Q4", 0.5));
     records.add(new Record(1, "2007-Q1", 0.5));
@@ -80,8 +82,9 @@ public class NetworkServiceUnitTest
 
     Observable<List<Consumption>> observable = service.GetConsumption(2008, 2018);
 
-    TestObserver<List<Consumption>> testObserver = new TestObserver<>();
+    observable.subscribeOn(testScheduler);
 
+    TestObserver<List<Consumption>> testObserver = new TestObserver<>();
     observable.subscribe(testObserver);
 
     testObserver.assertNoErrors();
@@ -90,11 +93,12 @@ public class NetworkServiceUnitTest
     testObserver.assertValue(args -> !args.isEmpty());
     testObserver.assertValue(args -> args.size() == 2);
 
+    testObserver.assertValue(args -> args.get(0).getBreakdowns().size() == 2);
     testObserver.assertValue(args -> args.get(0).getYear() == 2008);
-    testObserver.assertValue(args -> args.get(0).getVolume() == 1.0);
+    testObserver.assertValue(args -> args.get(0).getTotalVolume() == 1.0);
 
     testObserver.assertValue(args -> args.get(1).getYear() == 2009);
-    testObserver.assertValue(args -> args.get(1).getVolume() == 0.5);
+    testObserver.assertValue(args -> args.get(1).getTotalVolume() == 0.5);
 
     testObserver.dispose();
   }

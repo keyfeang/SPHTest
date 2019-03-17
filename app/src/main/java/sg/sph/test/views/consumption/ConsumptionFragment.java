@@ -29,13 +29,15 @@ public class ConsumptionFragment extends NavigationItemFragment
     ConsumptionFragmentBinding binding =
       DataBindingUtil.inflate(inflater, R.layout.consumption_fragment, container, false);
 
-    mViewModel =  new ConsumptionViewModel();
+    mViewModel =  new ConsumptionViewModel(getContext());
     binding.setModel(mViewModel);
 
     binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                                                                   LinearLayoutManager.VERTICAL,
                                                                   false));
     binding.recyclerView.addItemDecoration(new DividerItemDecoration());
+
+
 
     return binding.getRoot();
   }
