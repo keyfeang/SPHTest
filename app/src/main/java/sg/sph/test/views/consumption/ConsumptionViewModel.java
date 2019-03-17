@@ -6,8 +6,10 @@ import android.databinding.ObservableBoolean;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import sg.sph.test.core.Services;
 import sg.sph.test.core.network.Consumption;
 import sg.sph.test.core.network.INetworkService;
@@ -39,6 +41,7 @@ public class ConsumptionViewModel implements OnArrowClickEventHandler
     mDisposables.clear();
 
     mDisposables.add(mNetworkService.getConsumptions()
+        .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(args ->
         {
@@ -58,6 +61,7 @@ public class ConsumptionViewModel implements OnArrowClickEventHandler
     mDisposables.add(mNetworkService.syncConsumption(2008, 2018)
         // Add a temporary delay to simulate progress
         .delay(3, TimeUnit.SECONDS)
+        .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(args ->
         {

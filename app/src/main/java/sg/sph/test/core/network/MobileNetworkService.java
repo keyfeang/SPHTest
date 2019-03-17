@@ -28,8 +28,7 @@ public class MobileNetworkService extends ServiceExecutor
   @Override
   public Observable<List<Consumption>> getConsumptions()
   {
-    return Observable.just(mStorage.listAll())
-        .subscribeOn(Schedulers.from(getExecutor()));
+    return Observable.just(mStorage.listAll());
   }
 
   @Override
@@ -38,7 +37,6 @@ public class MobileNetworkService extends ServiceExecutor
     // TODO Hard offset and limit. If need paging. Need to redesign result data model to
     // provide paging properties. HasNext(), current offset and limit
     return mApi.GetDataUsage(0, 56)
-        .subscribeOn(Schedulers.newThread())
         .map(args ->
         {
           List<Consumption> result = new ArrayList<>(toYear - fromYear);
