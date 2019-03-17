@@ -11,8 +11,18 @@ public class Consumption extends RealmObject
   @PrimaryKey
   private int year;
   private double totalVolume;
-
   private RealmList<Breakdown> breakdowns;
+
+  public Consumption()
+  {
+  }
+
+  public Consumption(int year, double totalVolume, RealmList<Breakdown> breakdowns)
+  {
+    this.year = year;
+    this.totalVolume = totalVolume;
+    this.breakdowns = breakdowns;
+  }
 
   public int getYear()
   {
