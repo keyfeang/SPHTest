@@ -30,7 +30,6 @@ public class MobileNetworkService extends ServiceExecutor
     // provide paging properties. HasNext(), current offset and limit
     return mApi.GetDataUsage(0, 56)
         .subscribeOn(Schedulers.newThread())
-        .observeOn(Schedulers.from(getExecutor()))
         .map(args ->
         {
           List<Consumption> result = new ArrayList<>(toYear - fromYear);
