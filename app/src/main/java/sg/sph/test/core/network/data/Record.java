@@ -12,6 +12,17 @@ public class Record
   @SerializedName("volume_of_mobile_data")
   private double volume;
 
+  public Record()
+  {
+  }
+
+  public Record(long id, String quarter, double volume)
+  {
+    this.ID = id;
+    this.quarter = quarter;
+    this.volume = volume;
+  }
+
   public long getID()
   {
     return ID;
