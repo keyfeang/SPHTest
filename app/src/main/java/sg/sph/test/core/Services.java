@@ -38,6 +38,8 @@ public class Services
     INetworkApi networkApi = new MobileNetworkApi(requestProvider);
 
     mNetworkService = new MobileNetworkService(networkApi);
+
+    mNetworkService.onCreate();
   }
 
   /* Methods */

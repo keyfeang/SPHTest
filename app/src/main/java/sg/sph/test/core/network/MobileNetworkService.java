@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 import sg.sph.test.core.network.api.INetworkApi;
 import sg.sph.test.core.network.data.Record;
 
@@ -26,7 +28,9 @@ public class MobileNetworkService extends ServiceExecutor
   {
     // TODO Hard offset and limit. If need paging. Need to redesign result data model to
     // provide paging properties. HasNext(), current offset and limit
-    return mApi.GetDataUsage(56, 56)
+    return mApi.GetDataUsage(0, 56)
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(Schedulers.from(getExecutor()))
         .map(args ->
         {
           List<Consumption> result = new ArrayList<>(toYear - fromYear);

@@ -6,6 +6,7 @@ import android.net.Uri;
 import com.keyfe.ang.foundation.tools.http.HttpConnection;
 
 import io.reactivex.Observable;
+import sg.sph.test.configs.Configuration;
 
 public class RequestProvider implements IRequestProvider
 {
@@ -21,8 +22,7 @@ public class RequestProvider implements IRequestProvider
   {
     return Observable.fromCallable(() ->
     {
-      Uri.Builder builder = Uri.parse("").buildUpon();
-      builder.appendPath(uri);
+      Uri.Builder builder = Uri.parse(Configuration.NetworkBaseURL + uri).buildUpon();
 
       HttpConnection conn = new HttpConnection(mContext, builder.toString());
       appendDefaultProperties(conn);

@@ -22,20 +22,24 @@ public class RecordParser
   {
     List<Record> result = null;
 
-    JSONObject object = new JSONObject(rawData);
-    JSONObject resultObject = object.optJSONObject(PROP_RESULT);
-    if (resultObject != null)
+    if (rawData != null)
     {
-      JSONArray recordArray = resultObject.optJSONArray(PROP_RECORDS);
-
-      if (recordArray != null)
+      JSONObject object = new JSONObject(rawData);
+      JSONObject resultObject = object.optJSONObject(PROP_RESULT);
+      if (resultObject != null)
       {
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Record>>() {}.getType();
+        JSONArray recordArray = resultObject.optJSONArray(PROP_RECORDS);
 
-        result = gson.fromJson(recordArray.toString(), type);
+        if (recordArray != null)
+        {
+          Gson gson = new Gson();
+          Type type = new TypeToken<List<Record>>() {}.getType();
+
+          result = gson.fromJson(recordArray.toString(), type);
+        }
       }
     }
+
     return result == null ? new ArrayList<>(0) : result;
   }
 }
